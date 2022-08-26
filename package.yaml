@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'sam-app
+
+  Sample SAM Template for sam-app
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+    Tracing: Active
+    PermissionsBoundary: arn:aws:iam::641054126528:policy/cms-cloud-admin/ct-ado-poweruser-permissions-boundary-policy
+  Api:
+    TracingEnabled: true
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: my-app
+    Description: hello world
+    Author: faraazkhan
+    SpdxLicenseId: Apache-2.0
+    LicenseUrl: s3://aws-sam-cli-managed-default-samclisourcebucket-s0qsd8a7qklc/d41d8cd98f00b204e9800998ecf8427e
+    ReadmeUrl: s3://aws-sam-cli-managed-default-samclisourcebucket-s0qsd8a7qklc/92db553694f8be0833542e74bf6770ed
+    Labels:
+    - tests
+    HomePageUrl: https://github.com/faraazkhan/sam-app
+    SemanticVersion: '0.0.1'
+    SourceCodeUrl: https://github.com/faraazkhan/sam-app
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-s0qsd8a7qklc/c6ce8fa8b5a97dd022ecd006536eb5a4
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Role: arn:aws:iam::641054126528:role/delegatedadmin/developer/faraaz-lambda-role
+      Architectures:
+      - x86_64
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: get
+    Metadata:
+      SamResourceId: HelloWorldFunction
+Outputs:
+  HelloWorldApi:
+    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/
+  HelloWorldFunction:
+    Description: Hello World Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - HelloWorldFunction
+      - Arn
